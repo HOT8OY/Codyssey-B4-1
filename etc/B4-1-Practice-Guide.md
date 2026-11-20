@@ -1,6 +1,6 @@
 # B4-1 미션 실습 완벽 가이드라인 (OrbStack 초기 설정부터 최종 제출까지)
 
-이 문서는 **초급 개발자**가 아무것도 설정되지 않은 초기 **OrbStack(macOS)** 환경에서 시작하여, [B4-1-Mission.md](file:///Users/4321qwaszx9029/Codyssey-B4-1/etc/B4-1-Mission.md)의 모든 필수 요구사항과 보너스 과제까지 스스로 이해하며 완수할 수 있도록 작성된 단계별 실습 가이드입니다. 각 단계마다 **사용된 명령어와 옵션(`-m`, `-i`, `-tulnp`, `-aG` 등)의 정확한 의미**를 함께 정리했습니다.
+이 문서는 **초급 개발자**가 아무것도 설정되지 않은 초기 **OrbStack(macOS)** 환경에서 시작하여, [B4-1-Mission.md](file:///Users/[ID_Masking]/Codyssey-B4-1/etc/B4-1-Mission.md)의 모든 필수 요구사항과 보너스 과제까지 스스로 이해하며 완수할 수 있도록 작성된 단계별 실습 가이드입니다. 각 단계마다 **사용된 명령어와 옵션(`-m`, `-i`, `-tulnp`, `-aG` 등)의 정확한 의미**를 함께 정리했습니다.
 
 ---
 
@@ -348,7 +348,7 @@ getfacl /home/agent-admin/agent-app/upload_files \
 
 ### 3-1. 맥(Host)에 있는 `agent-app`을 우분투로 복사하기
 
-OrbStack으로 만든 우분투 가상머신 안에서는 맥의 폴더(`/Users/4321qwaszx9029/...`)가 그대로 연결(마운트)되어 있어서 `cp` 명령어로 바로 복사할 수 있습니다.
+OrbStack으로 만든 우분투 가상머신 안에서는 맥의 폴더(`/Users/[ID_Masking]/...`)가 그대로 연결(마운트)되어 있어서 `cp` 명령어로 바로 복사할 수 있습니다.
 
 1. 먼저 우분투 터미널에서 내 리눅스의 CPU 아키텍처를 확인합니다.
    ```bash
@@ -363,9 +363,9 @@ OrbStack으로 만든 우분투 가상머신 안에서는 맥의 폴더(`/Users/
    ```bash
    ARCH=$(uname -m)
    if [ "$ARCH" = "x86_64" ]; then
-       sudo cp /Users/4321qwaszx9029/Codyssey-B4-1/etc/agent-app/agent-app-linux-x86 /home/agent-admin/agent-app/agent_app.py
+       sudo cp /Users/[ID_Masking]/Codyssey-B4-1/etc/agent-app/agent-app-linux-x86 /home/agent-admin/agent-app/agent_app.py
    else
-       sudo cp /Users/4321qwaszx9029/Codyssey-B4-1/etc/agent-app/agent-app-linux-arm64 /home/agent-admin/agent-app/agent_app.py
+       sudo cp /Users/[ID_Masking]/Codyssey-B4-1/etc/agent-app/agent-app-linux-arm64 /home/agent-admin/agent-app/agent_app.py
    fi
 
    sudo chown agent-admin:agent-core /home/agent-admin/agent-app/agent_app.py
@@ -384,7 +384,7 @@ OrbStack으로 만든 우분투 가상머신 안에서는 맥의 폴더(`/Users/
 ### 3-2. ⚠️ [핵심 주의] 제공된 앱의 실제 동작 코드와 미션 문서 간의 차이점 해결
 
 > **[중요 발견 사항]**
-> 미션 문서([B4-1-Mission.md](file:///Users/4321qwaszx9029/Codyssey-B4-1/etc/B4-1-Mission.md#L89-L93))에는 아래와 같이 적혀 있습니다.
+> 미션 문서([B4-1-Mission.md](file:///Users/[ID_Masking]/Codyssey-B4-1/etc/B4-1-Mission.md#L89-L93))에는 아래와 같이 적혀 있습니다.
 > - `AGENT_KEY_PATH`: `$AGENT_HOME/api_keys/t_secret.key`
 > - 키 파일 경로: `$AGENT_HOME/api_keys/t_secret.key`
 >
@@ -991,10 +991,10 @@ exit
 실습이 모두 끝났다면 최종 제출해야 할 산출물은 **2가지**입니다.
 
 1. **자동화 스크립트 소스코드 (`monitor.sh`)**
-   * 우분투 안에서 작성한 `monitor.sh`를 맥의 프로젝트 폴더(`/Users/4321qwaszx9029/Codyssey-B4-1/`)로 복사해 옵니다.
+   * 우분투 안에서 작성한 `monitor.sh`를 맥의 프로젝트 폴더(`/Users/[ID_Masking]/Codyssey-B4-1/`)로 복사해 옵니다.
    ```bash
    # 우분투 터미널 안에서 실행
-   cp /home/agent-admin/agent-app/bin/monitor.sh /Users/4321qwaszx9029/Codyssey-B4-1/monitor.sh
+   cp /home/agent-admin/agent-app/bin/monitor.sh /Users/[ID_Masking]/Codyssey-B4-1/monitor.sh
    ```
 2. **요구사항 수행 내역서 (문서 1개)**
    * 아래 **8가지 필수 증거 자료 체크리스트**의 명령어와 실행 결과를 하나의 마크다운(또는 PDF/워드) 문서로 정리합니다.

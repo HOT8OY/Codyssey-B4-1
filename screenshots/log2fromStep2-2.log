@@ -1,0 +1,142 @@
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m cody-ubuntu -u root
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), deny (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+20022/tcp                  ALLOW IN    Anywhere                  
+15034/tcp                  ALLOW IN    Anywhere                  
+20022/tcp (v6)             ALLOW IN    Anywhere (v6)             
+15034/tcp (v6)             ALLOW IN    Anywhere (v6)             
+
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo mkdir -p /home/agent-admin/agent-app/upload_files
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo mkdir -p /home/agent-admin/agent-app/api_keys
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo mkdir -p /home/agent-admin/agent-app/bin
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo mkdir -p /var/log/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# #2
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 755 /home/agent-admin/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 755 /home/agent-admin
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 750 /home/a
+gent-admin
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chown agent-admin:agent-common /home/agent-admin/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 755 /home/agent-admin
+sudo chown agent-admin:agent-common /home/agent-admin/agent-app
+sudo chmod 750 /home/agent-admin/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# #3
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chown agent-admin:agent-common /home/agent-admin/agent-app/upload_files
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 2770 /home/agent-admin/agent-app/upload_files
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo setfacl -m g:agent-common:rwx /home/agent-admin/agent-app/upload_files
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo setfacl -d -m g:a
+gent-common:rwx /home/agent-admin/agent-app/upload_files
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# #4
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chown agent-admin:agent-core /home/agent-admin/agent-app/api_keys
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# chmod 2770 /home/agent-admin/agent-app/api_keys
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo setfacl -m g:agent-co
+re:rwx /home/agent-admin/agent-app/api_keys
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo setfacl -d -m g:agent
+-core:rwx /home/agent-admin/agent-app/api_keys
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# #5
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chown agent-dev:agent-core /home/agent-admin/agent-app/bin
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 2770 /home/agent-admin/agent-app/bin
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# #6
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chown agent-admin:agent-core /var/log/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo chmod 2770 /var/log/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo setfacl -m g:agent-core:rwx /var/log/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# sudo setfacl -d -m g:agent
+-core:rwx /var/log/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# # directory structure and ACL check
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# ls -ld /home/agent-admin/agent-app \ /home/agent-admin/agent-app/upload_files \ /home/agent-admin/agent-app/api_keys \ /home/agent-admin/agent-app/bin \ /home/agent-admin/agent-app
+ls: cannot access ' /home/agent-admin/agent-app/upload_files': No such file or directory
+ls: cannot access ' /home/agent-admin/agent-app/api_keys': No such file or directory
+ls: cannot access ' /home/agent-admin/agent-app/bin': No such file or directory
+ls: cannot access ' /home/agent-admin/agent-app': No such file or directory
+drwxr-x--- 1 agent-admin agent-common 46 Nov 20 16:55  /home/agent-admin/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# ds
+-bash: ds: command not found
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# ls -ld /home/agent-admin/agent-app \
+       /home/agent-admin/agent-app/upload_files \
+       /home/agent-admin/agent-app/api_keys \
+       /home/agent-admin/agent-app/bin \
+       /var/log/agent-app
+drwxr-x---  1 agent-admin agent-common 46 Nov 20 16:55 /home/agent-admin/agent-app
+drwxrws---+ 1 agent-admin agent-core    0 Nov 20 16:55 /home/agent-admin/agent-app/api_keys
+drwxrws---  1 agent-dev   agent-core    0 Nov 20 16:55 /home/agent-admin/agent-app/bin
+drwxrws---+ 1 agent-admin agent-common  0 Nov 20 16:55 /home/agent-admin/agent-app/upload_files
+drwxrws---+ 1 agent-admin agent-core    0 Nov 20 17:12 /var/log/agent-app
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# 
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# getfacl /home/agent-admin/agent-app/upload_files \ /home/agent-admin/agent-app/api_keys \ /var/log/agent-app
+getfacl: Removing leading '/' from absolute path names
+# file: home/agent-admin/agent-app/upload_files
+# owner: agent-admin
+# group: agent-common
+# flags: -s-
+user::rwx
+group::rwx
+group:agent-common:rwx
+mask::rwx
+other::---
+default:user::rwx
+default:group::rwx
+default:group:agent-common:rwx
+default:mask::rwx
+default:other::---
+
+getfacl:  /home/agent-admin/agent-app/api_keys: No such file or directory
+getfacl:  /var/log/agent-app: No such file or directory
+
+root@cody-ubuntu:/Users/[ID_MASKING]/Codyssey-B4-1# getfacl /home/agent-admin/agent-app/upload_files /home/agent-admin/agent-app/api_keys /var/log/agent-app
+getfacl: Removing leading '/' from absolute path names
+# file: home/agent-admin/agent-app/upload_files
+# owner: agent-admin
+# group: agent-common
+# flags: -s-
+user::rwx
+group::rwx
+group:agent-common:rwx
+mask::rwx
+other::---
+default:user::rwx
+default:group::rwx
+default:group:agent-common:rwx
+default:mask::rwx
+default:other::---
+
+# file: home/agent-admin/agent-app/api_keys
+# owner: agent-admin
+# group: agent-core
+# flags: -s-
+user::rwx
+group::rwx
+group:agent-core:rwx
+mask::rwx
+other::---
+default:user::rwx
+default:group::rwx
+default:group:agent-core:rwx
+default:mask::rwx
+default:other::---
+
+# file: var/log/agent-app
+# owner: agent-admin
+# group: agent-core
+# flags: -s-
+user::rwx
+group::rwx
+group:agent-core:rwx
+mask::rwx
+other::---
+default:user::rwx
+default:group::rwx
+default:group:agent-core:rwx
+default:mask::rwx
+default:other::---

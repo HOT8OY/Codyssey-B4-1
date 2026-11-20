@@ -1,4 +1,4 @@
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m cody-ubuntu
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m cody-ubuntu
 
     ╭───────────────────────────────────────────────────────╮
     │                                                       │
@@ -9,32 +9,8 @@ c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m cody-ubuntu
     │                                                       │
     ╰───────────────────────────────────────────────────────╯
 
-user: unknown user c[ID_MASKING]
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m ubuntu     
-
-    ╭───────────────────────────────────────────────────────╮
-    │                                                       │
-    │              OrbStack update available!               │
-    │              Run "orb update" to update.              │
-    │                                                       │
-    │  Updates include improvements, features, and fixes.   │
-    │                                                       │
-    ╰───────────────────────────────────────────────────────╯
-
-machine not found
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m cody-ubuntu
-
-    ╭───────────────────────────────────────────────────────╮
-    │                                                       │
-    │              OrbStack update available!               │
-    │              Run "orb update" to update.              │
-    │                                                       │
-    │  Updates include improvements, features, and fixes.   │
-    │                                                       │
-    ╰───────────────────────────────────────────────────────╯
-
-user: unknown user c[ID_MASKING]
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m ubuntu     
+user: unknown user [ID_MASKING]
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m ubuntu     
 
     ╭───────────────────────────────────────────────────────╮
     │                                                       │
@@ -46,7 +22,7 @@ c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m ubuntu
     ╰───────────────────────────────────────────────────────╯
 
 machine not found
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m cody-ubuntu
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m cody-ubuntu
 
     ╭───────────────────────────────────────────────────────╮
     │                                                       │
@@ -57,9 +33,33 @@ c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m cody-ubuntu
     │                                                       │
     ╰───────────────────────────────────────────────────────╯
 
-user: unknown user c[ID_MASKING]
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % 
-c[ID_MASKING]@c6r9s5 Codyssey-B4-1 % orb -m cody-ubuntu -u root
+user: unknown user [ID_MASKING]
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m ubuntu     
+
+    ╭───────────────────────────────────────────────────────╮
+    │                                                       │
+    │              OrbStack update available!               │
+    │              Run "orb update" to update.              │
+    │                                                       │
+    │  Updates include improvements, features, and fixes.   │
+    │                                                       │
+    ╰───────────────────────────────────────────────────────╯
+
+machine not found
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m cody-ubuntu
+
+    ╭───────────────────────────────────────────────────────╮
+    │                                                       │
+    │              OrbStack update available!               │
+    │              Run "orb update" to update.              │
+    │                                                       │
+    │  Updates include improvements, features, and fixes.   │
+    │                                                       │
+    ╰───────────────────────────────────────────────────────╯
+
+user: unknown user [ID_MASKING]
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % 
+[ID_MASKING]@[HOST_MASKING] Codyssey-B4-1 % orb -m cody-ubuntu -u root
 
     ╭───────────────────────────────────────────────────────╮
     │                                                       │
