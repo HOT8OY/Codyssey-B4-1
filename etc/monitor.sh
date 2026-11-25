@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export LC_ALL=C
+
+APP_NAME="agent_app.py"
+APP_PORT="15034"
+LOG_DIR="/var/log/agent-app"
+LOG_FILE="${LOG_DIR}/monitor.log"
+MAX_LOG_SIZE=$((10 * 1024 * 1024))
+MAX_LOG_FILES=10
+
+echo "===== SYSTEM MONITOR RESULT ====="
+echo ""
+echo "[HEALTH CHECK]"
+
+# 1. Health Check - 프로세스 실행 확인 (실패 시 exit 1)
+
+APP_PID=$(pgrep -f "${APP_NAME}" | head -n 1)
+if [ -z "${APP_PID}" ]; then
+    echo "Checking process '${APP_NAME}'... [FAIL] (Process not running)"
+    exit 1
+fi
+echo "Checking process '${APP_NAME}'... [OK] (PID: ${APP_PID})"
+
+# 2. Health Check - TCP 15034 포트 LISTEN 상태 확인 (실패 시 exit 1)
+
+if ! ss -tuln | awk '{print $5}' | grep -Eq "(^|:)${APP_PORT}$"; then
+    echo "Checking port ${APP_PORT}... [FAIL] (Port ${APP_PORT} is not LISTENING)"
+    exit 1
+fi
+echo "Checking port ${APP_PORT}... [OK]"
+
+# 3. 방화벽(UFW 또는 firewalld) 활성화 상태 점검 (비활성 시 WARNING만 출력)
+
+FW_ACTIVE=0
+if command -v ufw >/dev/null 2>&1; then
+    if sudo -n ufw status 2>/dev/null | grep -q "Status: active"; then
+        FW_ACTIVE=1
+    elif [ -r /etc/ufw/ufw.conf ] && grep -q "^ENABLED=yes" /etc/ufw/ufw.conf; then
+        FW_ACTIVE=1
+    fi
+elif command -v firewall-cmd >/dev/null 2>&1; then
+    if firewall-cmd --state 2>/dev/null | grep -q "running"; then
+        FW_ACTIVE=1
+    fi
+fi
+
+if [ "${FW_ACTIVE}" -ne 1 ]; then
+    echo "[WARNING] Firewall (UFW/firewalld) is inactive!"
+fi
+
+# 4. 시스템 자원 수집 (CPU, MEM, DISK)
+
+# (1) CPU 사용률(%): /proc/stat을 0.5초 간격으로 두 번 읽어 실제 사용률 계산
+read -r _ u1 n1 s1 i1 w1 irq1 sirq1 st1 _ < /proc/stat
+sleep 0.5
+read -r _ u2 n2 s2 i2 w2 irq2 sirq2 st2 _ < /proc/stat
+
+TOTAL1=$((u1 + n1 + s1 + i1 + w1 + irq1 + sirq1 + st1))
+TOTAL2=$((u2 + n2 + s2 + i2 + w2 + irq2 + sirq2 + st2))
+IDLE1=$((i1 + w1))
+IDLE2=$((i2 + w2))
+
+DIFF_TOTAL=$((TOTAL2 - TOTAL1))
+DIFF_IDLE=$((IDLE2 - IDLE1))
+
+if [ "${DIFF_TOTAL}" -gt 0 ]; then
+    CPU_USAGE=$(awk -v dt="${DIFF_TOTAL}" -v di="${DIFF_IDLE}" 'BEGIN { printf "%.1f", ((dt - di) / dt) * 100 }')
+else
+    CPU_USAGE="0.0"
+fi
+
+# (2) 메모리 사용률(%): free 명령어에서 total 대비 used 비율 계산
+MEM_USAGE=$(free | awk '/^Mem:/ { printf "%.1f", ($3 / $2) * 100 }')
+
+# (3) 디스크 사용률(Root partition '/', Used %): 정수형 % 추출
+DISK_USED=$(df -P / | awk 'NR==2 { gsub(/%/, "", $5); print $5 }')
+
+echo ""
+echo "[RESOURCE MONITORING]"
+echo "CPU Usage : ${CPU_USAGE}%"
+echo "MEM Usage : ${MEM_USAGE}%"
+echo "DISK Used : ${DISK_USED}%"
+
+echo ""
+
+# 5. 임계값 경고 (CPU > 20%, MEM > 10%, DISK_USED > 80%)
+if awk -v cpu="${CPU_USAGE}" 'BEGIN { exit !(cpu > 20.0) }'; then
+    echo "[WARNING] CPU threshold exceeded (${CPU_USAGE}% > 20%)"
+fi
+
+if awk -v mem="${MEM_USAGE}" 'BEGIN { exit !(mem > 10.0) }'; then
+    echo "[WARNING] MEM threshold exceeded (${MEM_USAGE}% > 10%)"
+fi
+
+if [ "${DISK_USED}" -gt 80 ]; then
+    echo "[WARNING] DISK_USED threshold exceeded (${DISK_USED}% > 80%)"
+fi
+
+# 6. 로그 파일 용량 관리 (최대 10MB / 최대 10개 파일 유지)
+#    monitor.log + monitor.log.1 ~ monitor.log.9 (총 10개 유지)
+
+rotate_logs() {
+    if [ -f "${LOG_FILE}" ]; then
+        CURRENT_SIZE=$(stat -c%s "${LOG_FILE}" 2>/dev/null || wc -c < "${LOG_FILE}")
+        if [ "${CURRENT_SIZE}" -ge "${MAX_LOG_SIZE}" ]; then
+            MAX_ROTATE=$((MAX_LOG_FILES - 1))
+            # 가장 오래된 파일 삭제
+            [ -f "${LOG_FILE}.${MAX_ROTATE}" ] && rm -f "${LOG_FILE}.${MAX_ROTATE}"
+            # 기존 백업 파일 번호를 1씩 증가 (.8 -> .9, ..., .1 -> .2)
+            for ((i = MAX_ROTATE - 1; i >= 1; i--)); do
+                if [ -f "${LOG_FILE}.${i}" ]; then
+                    mv "${LOG_FILE}.${i}" "${LOG_FILE}.$((i + 1))"
+                fi
+            done
+            # 현재 monitor.log를 monitor.log.1로 이동
+            mv "${LOG_FILE}" "${LOG_FILE}.1"
+        fi
+    fi
+}
+
+rotate_logs
+
+# 7. 로그 기록 ([YYYY-MM-DD HH:MM:SS] PID:... CPU:..% MEM:..% DISK_USED:..%)
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+LOG_LINE="[${TIMESTAMP}] PID:${APP_PID} CPU:${CPU_USAGE}% MEM:${MEM_USAGE}% DISK_USED:${DISK_USED}%"
+
+echo "${LOG_LINE}" >> "${LOG_FILE}"
+chmod 660 "${LOG_FILE}" 2>/dev/null || true
+
+
+# 8. 누적 로그 기반 통계 출력 (콘솔 출력 예시와 동일한 리포트)
+if [ -f "${LOG_FILE}" ]; then
+    echo ""
+    awk '
+    {
+        ts = substr($1, 2) " " substr($2, 1, 8)
+        cpu = $4; sub(/CPU:/, "", cpu); sub(/%/, "", cpu); cpu += 0
+        mem = $5; sub(/MEM:/, "", mem); sub(/%/, "", mem); mem += 0
+
+        count++
+        cpu_sum += cpu
+        mem_sum += mem
+
+        if (count == 1 || cpu > cpu_max) { cpu_max = cpu; cpu_max_ts = ts }
+        if (count == 1 || cpu < cpu_min) { cpu_min = cpu; cpu_min_ts = ts }
+        if (count == 1 || mem > mem_max) { mem_max = mem; mem_max_ts = ts }
+        if (count == 1 || mem < mem_min) { mem_min = mem; mem_min_ts = ts }
+    }
+    END {
+        if (count > 0) {
+            printf "====== STATISTICS REPORT ======\n"
+            printf "[CPU]\n"
+            printf "Average : %.1f%%\n", cpu_sum / count
+            printf "Maximum : %.1f%% at %s\n", cpu_max, cpu_max_ts
+            printf "Minimum : %.1f%% at %s\n", cpu_min, cpu_min_ts
+            printf "[Memory]\n"
+            printf "Average : %.1f%%\n", mem_sum / count
+            printf "Maximum : %.1f%% at %s\n", mem_max, mem_max_ts
+            printf "Minimum : %.1f%% at %s\n", mem_min, mem_min_ts
+            printf "[Samples]\n"
+            printf "Data Points: %d samples\n", count
+        }
+    }' "${LOG_FILE}"
+fi
+
+echo ""
+echo "[INFO] Log appended: ${LOG_FILE}"
