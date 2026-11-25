@@ -1,0 +1,17 @@
+[ACC_Masking]@cody-ubuntu:/Users/[ID_Masking]/Codyssey-B4-1$ sudo su --login agent-admin
+agent-admin@cody-ubuntu:~$ #Step 5. 자동 실행 (cron) 설정 및 검증 
+agent-admin@cody-ubuntu:~$ crontab -l
+no crontab for agent-admin
+agent-admin@cody-ubuntu:~$ # 기존 crontab에 매분 실행 규칙 등록
+agent-admin@cody-ubuntu:~$ (crontab -l 2>/dev/null | grep -v "monitor.sh"; echo "* * * * * /home/agent-admin/agent-app/bin/monitor.sh >/dev/null 2>&1") | crontab 
+-
+agent-admin@cody-ubuntu:~$ crontab -l
+* * * * * /home/agent-admin/agent-app/bin/monitor.sh >/dev/null 2>&1
+agent-admin@cody-ubuntu:~$ cat /var/log/agent-app/monitor.log
+[2026-11-25 18:09:18] PID:688 CPU:5.0% MEM:2.5% DISK_USED:1%
+[2026-11-25 19:15:02] PID:688 CPU:3.1% MEM:3.5% DISK_USED:1%
+agent-admin@cody-ubuntu:~$ tail -f /var/log/agent-app/monitor.log
+[2026-11-25 18:09:18] PID:688 CPU:5.0% MEM:2.5% DISK_USED:1%
+[2026-11-25 19:15:02] PID:688 CPU:3.1% MEM:3.5% DISK_USED:1%
+[2026-11-25 19:16:01] PID:688 CPU:3.7% MEM:3.5% DISK_USED:1%
+[2026-11-25 1
